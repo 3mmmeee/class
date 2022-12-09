@@ -28,7 +28,7 @@ import com.developer.myapp.user.service.IUserService;
 @Controller
 public class userController { // È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿  ï¿½ï¿½Ã»ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½Ñ·ï¿½ (ï¿½Úµé·¯)
    static final Logger logger = LoggerFactory.getLogger(userController.class);
-
+// ÄÁÆ®·Ñ·¯ ÀÔ´Ï´Ù.
    @Autowired
    IUserService UserService;
    
