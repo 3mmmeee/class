@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.developer.myapp.jobhunterboard.dao.IJHBoardRepository">
+
+	<select id="test" resultType="int">
+		select count(*) from jobhunter_board
+	</select>
+
+ <select id="selectJHBoardArticleListByCategory" parameterType="int"
+	resultType="com.developer.myapp.jobhunterboard.model.JHBoard">
+	SELECT
+		JH_ID				AS	"jhId",
+		CATEGORY_ID			AS	"categoryId",
+		USER_ID				AS	"userId",
+		JH_BOARD_TITLE		AS	"jhBoardTitle",
+		JH_INSERT_DATE		AS	"jhInsertDate",
+		JH_READ_COUNT		AS	"jhReadCount",
+		RNUM+1				AS	"seq"
+
+		FROM(
+			SELECT J.JH_ID, J.CATEGORY_ID, J.USER_ID, J.JH_BOARD_TITLE, 
+			J.JH_INSERT_DATE, J.JH_READ_COUNT, ROWNUM AS RNUM
+			FROM jobhunter_board J, USER_TABLE U
+			WHERE J.USER_ID = U.USER_ID
+			AND J.CATEGORY_ID=#{categoryId}
+			)
+	WHERE RNUM BETWEEN #{start} AND #{end}
+	ORDER BY JH_INSERT_DATE DESC
+	</select> 
+	
+	<!-- 게시글 상세 조회  -->
+	<select id="selectJHBoardArticle" parameterType="int"
+	resultType="com.developer.myapp.jobhunterboard.model.JHBoard">
+	 SELECT
+     	  J.JH_ID            	   AS   "jhId",
+     	  JU.JH_FILE_ID			   AS   "jhFileId",
+     	  JU.JH_FILE_SIZE		   AS   "jhFileSize",
+	      J.CATEGORY_ID            AS   "categoryId",
+	      J.USER_ID         	   AS   "userId",
+	      J.JH_BOARD_TITLE         AS   "jhBoardTitle",
+	      J.JH_BOARD_CONTENT       AS   "jhBoardContent",
+	      J.jh_read_count 		   as    "jhReadCount",
+	      J.JH_INSERT_DATE         AS   "jhInsertDate",
+	      JU.JH_FILE_NAME      	   AS   "jhFileName"
+   	 FROM JOBHUNTER_BOARD J LEFT OUTER JOIN JOBHUNTER_UPLOAD_FILE JU
+    	  ON J.JH_ID=JU.JH_ID
+     WHERE J.JH_ID=#{jhId} and category_id=#{categoryId}
+	</select>
+	
+	<update id="updateJHBoardReadCount" parameterType="int">
+	UPDATE JOBHUNTER_BOARD
+		SET JH_READ_COUNT=JH_READ_COUNT+1
+	WHERE JH_ID=#{jhId}
+	</update>
+	
+	<select id="selectMaxJHBoardArticleNo" parameterType="int" resultType="int">
+	SELECT
+		NVL(MAX(JH_ID),0) AS "JHBoardArticleNo" FROM JOBHUNTER_BOARD
+	</select>
+	
+	<select id="selectMaxJHBoardFileId" parameterType="int" resultType="int">
+	SELECT
+		NVL(MAX(JH_FILE_ID),0) AS "jhFileId" FROM JOBHUNTER_UPLOAD_FILE
+	</select>
+	
+	<insert id="insertJHBoardArticle" parameterType="com.developer.myapp.jobhunterboard.model.JHBoard">
+	INSERT INTO
+	JOBHUNTER_BOARD
+		(JH_ID, CATEGORY_ID, USER_ID, JH_BOARD_TITLE, JH_BOARD_CONTENT,
+		JH_INSERT_DATE, JH_READ_COUNT)
+	VALUES
+		(jh_id_SEQ.nextval, #{categoryId}, #{userId}, #{jhBoardTitle}, #{jhBoardContent},
+		SYSDATE, 0)
+	</insert>
+	
+	<insert id="insertJHBoardFildData" parameterType="com.developer.myapp.jobhunterboard.model.JHBoardUploadFile">
+	INSERT INTO
+	JOBHUNTER_UPLOAD_FILE
+		(JH_FILE_ID, JH_ID, JH_FILE_NAME, JH_FILE_SIZE, JH_FILE_CONTENT, JH_FILE_DATA)
+	VALUES
+		(jh_file_id_SEQ.nextval, #{jhId}, #{jhFileName}, #{jhFileSize}, #{jhFileContent}, #{jhFileData})
+	</insert>
+	
+	<select id="getJHBoardFile" parameterType="int" resultType="com.developer.myapp.jobhunterboard.model.JHBoardUploadFile">
+	SELECT
+		JH_FILE_ID			AS	"jhFileId",	
+		JH_ID				AS	"jhId",
+		JH_FILE_NAME		AS	"jhFileName",
+		JH_FILE_SIZE		AS	"jhFileSize",
+		JH_FILE_CONTENT		AS	"jhFileContent",
+		JH_FILE_DATA		AS	"jhFileData"
+	FROM JOBHUNTER_UPLOAD_FILE
+	WHERE JH_FILE_ID=#{jhFileId}
+	</select>
+	
+	<update id="updateJHBoardArticle" parameterType="com.developer.myapp.jobhunterboard.model.JHBoard">
+	UPDATE
+		JOBHUNTER_BOARD
+	SET
+		JH_BOARD_TITLE=#{jhBoardTitle}, JH_BOARD_CONTENT=#{jhBoardContent}, JH_INSERT_DATE=SYSDATE
+	WHERE
+		JH_ID=#{jhId}
+	</update>
+	
+	<update id="updateJHBoardFileData" parameterType="com.developer.myapp.jobhunterboard.model.JHBoardUploadFile">
+	UPDATE
+		JOBHUNTER_UPLOAD_FILE
+		SET
+			JH_FILE_NAME=#{jhFileName}, JH_FILE_SIZE=#{jhFileSize},
+			JH_FILE_CONTENT=#{jhFileContent}, JH_FILE_DATA=#{jhFileData}
+		WHERE
+			JH_FILE_ID=#{jhFileId}
+	</update>
+	
+	 <!--삭제할 게시글 정보 가져옴 -->
+   <select id="selectDeleteJHBoardArticle" parameterType="int" resultType="com.developer.myapp.jobhunterboard.model.JHBoard">
+   SELECT CATEGORY_ID AS "categoryId" FROM JOBHUNTER_BOARD
+   WHERE JH_ID=#{jhId}
+   </select>
+
+
+  <!-- 게시글 안에 댓글삭제 -->
+   <delete id="deleteJHBoardReply" parameterType="int">
+      delete from board_reply R
+      where exists (select jh_id from JOBHUNTER_BOARD J
+                 where J.jh_id=#{jhId}
+                 and J.jh_id=R.jh_id)
+   </delete>
+      
+    <!-- 게시글 안에 파일삭제 -->
+   <delete id="deleteJHBoardFileData" parameterType="int">
+      DELETE FROM JOBHUNTER_UPLOAD_FILE
+      WHERE EXISTS (SELECT JH_ID FROM JOBHUNTER_BOARD
+                  WHERE JOBHUNTER_BOARD.JH_ID=#{jhId}
+                  AND JOBHUNTER_BOARD.JH_ID=JOBHUNTER_UPLOAD_FILE.JH_ID) 
+   </delete>
+ 	
+ 	<!-- 게시글 삭제 -->
+   <delete id="deleteJHBoardArticleByjhId">
+   DELETE FROM
+      JOBHUNTER_BOARD
+   WHERE JH_ID=#{jhId}
+   </delete>
+ 
+	<select id="selectTotalJHBoardArticleCount" resultType="int">
+	SELECT COUNT(JH_ID) AS "count" FROM JOBHUNTER_BOARD
+	</select>
+	
+	<select id="selectTotalJHBoardArticleCountByCategoryId" parameterType="int" resultType="int">
+		SELECT COUNT(JH_ID) AS "count"
+		FROM JOBHUNTER_BOARD
+		WHERE CATEGORY_ID=#{categoryId}
+	</select>
+	
+	<select id="selectTotalArticleCountByKeyword"
+		parameterType="string" resultType="int">
+		select count(*) from jobhunter_board
+		where jh_board_title like #{keyword} or jh_board_content like #{keyword}
+		</select>	
+	<select id="searchJHBoardListByContentKeyword" parameterType="hashmap" resultType="com.developer.myapp.jobhunterboard.model.JHBoard">
+	select jh_id as "jhId",
+		category_id as "categoryId",
+		user_id as "userId",
+		jh_board_title as "jhBoardTitle",
+		jh_insert_date as "jhInsertDate",
+		jh_read_count as "jhReadCount",
+		rownum+1 as "seq"
+	from(
+	select*from jobhunter_board
+			where jh_board_title like #{keyword}
+			or
+			jh_board_content like #{keyword}
+	)
+	where rownum between #{start} and #{end}
+	order by jh_insert_date DESC
+		
+	</select>
+</mapper>

@@ -1,0 +1,13 @@
+@charset "UTF-8";
+.ad7_img{
+	width: 100%;
+}
+.SearchBox_1 input[type=text] {
+	width: 400px;
+	padding: 10px;
+	border-radius: 25px 0 0 25px;
+	height: 19px;
+	padding-left: 22px;
+	
+	/* 	border: none; */
+}

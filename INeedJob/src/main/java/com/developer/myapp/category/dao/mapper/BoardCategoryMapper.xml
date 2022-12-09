@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.developer.myapp.category.dao.IBoardCategoryRepository">
+
+
+<select id="selectAllCategory" resultType="com.developer.myapp.category.model.BoardCategory">
+
+<![CDATA[
+   select
+      CATEGORY_ID         as       "categoryId",
+      CATEGORY_NAME       as       "categoryName",
+      CATEGORY_ORDER       as       "categoryOrder",
+      TYPE            as       "type"
+   FROM CATEGORY
+   ORDER BY CATEGORY_ORDER
+]]>
+</select>
+
+
+<!-- 카테고리(현업자 / 취준생) -->
+<select id="list" resultType="com.developer.myapp.category.model.BoardCategory" parameterType="int">
+select
+      category_id as "categoryId",
+      category_name as "categoryName",
+      category_order as "categoryOrder",
+      type
+from category 
+where type=#{type}
+
+</select>
+
+<!-- 카테고리(리스트) -->
+
+<select id="list2" resultType="com.developer.myapp.category.model.BoardCategory">
+select 
+         category_id as "categoryId",
+      category_name as "categoryName",
+      category_order as "categoryOrder",
+      type
+from category 
+</select>
+
+<!-- 게시글 등록 시 category name 불러오기 -->
+<select id="getCategoryName" resultType="String" parameterType="int">
+	select category_name 
+	from category where category_Id = #{categoryId}
+</select>
+</mapper>

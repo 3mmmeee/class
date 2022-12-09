@@ -1,0 +1,80 @@
+@charset "UTF-8";
+
+body {
+	text-align: center;
+}
+
+.subTitle {
+	padding: 10px;
+	color: #94969b;
+}
+
+
+.container {
+	position: relative;
+	max-width: 900px;
+	min-height: 520px;
+	margin: 40px auto;
+	padding: 70px 10px 80px;
+	border: 1px solid #94969b;
+	border-radius: 10px;
+	box-sizing: border-box;
+}
+
+.form-control {
+	width: 478px;
+	display: inline-block;
+	padding: 0.375rem 0.75rem;
+	margin: 5px;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 2;
+	color: #212529;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid##94969b;
+	appearance: none;
+	border-radius: 0.375rem;
+}
+
+.insert_btn {
+	margin-top: 10px;
+	width: 478px;
+	height: 54px;
+	box-shadow: inset 0px 1px 0px 0px #ffffff;
+	background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
+	background-color: #ffffff;
+	border-radius: 6px;
+	border: 1px solid #a6a3a6;
+	display: inline-block;
+	cursor: pointer;
+	color: #666666;
+	padding-top: 10px;
+	font-family: Arial;
+	font-size: 15px;
+	font-weight: bold;
+	text-decoration: none;
+	text-shadow: 0px 1px 0px #ffffff;
+	text-decoration-line: none
+}
+
+.insert-btn:hover {
+	background: linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
+	background-color: #f6f6f6;
+}
+
+.insert-btn:active {
+	position: relative;
+	top: 1px;
+}
+
+.signUp_logo {
+	width: 500px;
+	margin-bottom: 25px;
+	margin-top: 100px;
+}
+
+.span {
+	font-size: 25px;
+	font-weight: 700;
+}

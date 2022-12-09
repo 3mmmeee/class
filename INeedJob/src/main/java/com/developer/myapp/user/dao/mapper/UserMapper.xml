@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.developer.myapp.user.dao.IUserRepository">
+
+	<insert id="insertUser"
+		parameterType="com.developer.myapp.user.model.User">
+		<if test="userCompany != null">
+			INSERT INTO
+			user_table (user_id,
+			user_pw,
+			user_email,
+			user_name,
+			user_company,
+			user_approval)
+			VALUES
+			(#{userId}, #{userPw}, #{userEmail}, #{userName}, #{userCompany}, 'N')
+		</if>
+		<if test="userCompany==null">
+			INSERT INTO
+			user_table (user_id,
+			user_pw,
+			user_email,
+			user_name,
+			user_approval)
+			VALUES
+			(#{userId}, #{userPw}, #{userEmail}, #{userName}, 'N')
+		</if>
+	</insert>
+
+	<!-- User Upload -->
+	<insert id="UserUploadFile"
+		parameterType="com.developer.myapp.user.model.User">
+		INSERT INTO
+		USER_UPLOAD_FILE (user_file_id,
+		user_id,
+		user_file_name,
+		user_file_size,
+		user_file_content,
+		user_file_data)
+		VALUES
+		(user_file_id_seq.nextval, #{userId}, #{userFileName}, #{userFileSize}, #{fileContentType},
+		#{userFileData})
+	</insert>
+
+	<select id="selectUser" parameterType="string"
+		resultType="com.developer.myapp.user.model.User">
+		SELECT
+		user_id as userId,
+		user_pw as userPw,
+		user_name as userName,
+		user_email as userEmail,
+		user_company as userCompany,
+		user_approval as userApproval
+		FROM
+		user_table
+		WHERE
+		user_id=#{userId}
+	</select>
+
+	<select id="selectAllUsers"
+		resultType="com.developer.myapp.user.model.User">
+		SELECT
+		u.user_id as userId,
+		user_name as userName,
+		user_email as userEmail,
+		user_company as userCompany,
+		user_approval as userApproval
+		FROM
+		user_table u join user_upload_file f on u.user_id = f.user_id
+		WHERE u.user_approval = 'N'
+	</select>
+
+	<!-- 회원가입시 첨부 -->
+	<select id="getFile" parameterType="int"
+		resultType="com.developer.myapp.user.model.UserUploadFile">
+		SELECT
+		user_file_id AS "userFileId",
+		user_id AS "userId",
+		user_file_name AS "userFileName",
+		user_file_size AS "userFileSize",
+		user_file_content AS "fileContentType",
+		user_file_data AS "userFileData"
+
+		FROM USER_UPLOAD_FILE
+		WHERE user_file_id=#{userFileId}
+	</select>
+
+	<!-- 회원ID로 첨부파일 확인 -->
+	<select id="selectFileId" parameterType="String"
+		resultType="Integer">
+		SELECT
+		user_file_id AS "userFileId"
+		FROM USER_UPLOAD_FILE
+		WHERE user_id=#{userId}
+	</select>
+
+	<!-- 마이페이지에서 회원정보 수정 -->
+	<update id="updateMypage"
+		parameterType="com.developer.myapp.user.model.User">
+		UPDATE user_table
+		SET
+		<if test="userCompany != null">
+			user_id=#{userId},
+			user_pw=#{userPw},
+			user_name=#{userName},
+			user_email=#{userEmail},
+			user_company=#{userCompany}
+		</if>
+		<if test="userCompany == null">
+			user_id=#{userId},
+			user_pw=#{userPw},
+			user_name=#{userName},
+			user_email=#{userEmail}
+		</if>
+		WHERE
+		user_id=#{userId}
+	</update>
+
+	<!-- 관리자 권한으로 회원정보 수정 -->
+	<update id="updateUser"
+		parameterType="com.developer.myapp.user.model.User">
+		UPDATE user_table
+		SET
+		user_id=#{userId},
+		user_pw=#{userPw},
+		user_name=#{userName},
+		user_email=#{userEmail},
+		user_company=#{userCompany},
+		user_approval=#{userApproval}
+		WHERE
+		user_id=#{userId}
+	</update>
+
+	<!-- delete -->
+	<delete id="deleteUser"
+		parameterType="com.developer.myapp.user.model.User">
+		DELETE
+		FROM
+		user_table
+		WHERE
+		user_Id=#{userId} and user_pw=#{userPw}
+	</delete>
+
+	<!-- delete uploadFile (현업자 회원 탈퇴 시 사용) -->
+	<delete id="deleteFile"
+		parameterType="com.developer.myapp.user.model.User">
+		DELETE
+		FROM
+		USER_UPLOAD_FILE
+		WHERE
+		user_Id=#{userId}
+	</delete>
+
+</mapper>

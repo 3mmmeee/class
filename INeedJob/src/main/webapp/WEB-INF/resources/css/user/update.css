@@ -1,0 +1,52 @@
+@charset "UTF-8";
+
+.container {
+   padding: 50px 50px 100px 50px;
+   text-align: center;
+}
+.updateTitle {
+   padding-bottom: 50px;   
+}
+   
+.updateForm {
+   padding-top: 3px;
+   color: #94969b;
+   width: 500px;
+    display: block;
+    margin: auto;
+}
+.update_btn {
+   box-shadow: inset 0px 1px 0px 0px #ffffff;
+   background: linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
+   background-color: #ffffff;
+   border-radius: 6px;
+   border: 1px solid #a6a3a6;
+   cursor: pointer;
+   color: #666666;
+   font-family: Arial;
+   font-size: 15px;
+   font-weight: bold;
+   padding: 6px 24px;
+   text-decoration: none;
+   text-shadow: 0px 1px 0px #ffffff;
+}
+.update_btn:hover {
+   background:linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
+   background-color:#f6f6f6;
+}
+.update_btn:active {
+   position:relative;
+   top:1px;
+}
+
+.approval-img{
+   width: 200px;
+   padding: 20px;
+}
+.form-check{
+   text-align: center;
+}
+input[type="checkbox"]{
+   float: left;
+   position: relative;
+}

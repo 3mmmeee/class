@@ -1,0 +1,30 @@
+@charset "UTF-8";
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+   margin: 0;
+   padding: 0;
+   height: 100%;
+}
+
+.wrapper {
+   display:flex;
+   flex-direction:column;
+   margin: 0 auto;
+   max-width: 1200px;
+   margin-top: 40px;
+   padding-bottom: 1000px;
+   height:auto;
+   min-height: 100%;
+}
+
+.main-padding {
+   flex:1;
+}
+
+h1, h2, h3, h4, h5, h6, strong, th {
+   font-weight: normal;
+}

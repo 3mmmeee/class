@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.developer.myapp.empboard.dao.IEmpBoardRepository">
+	<!--게시글 목록 조회 -->
+	<select id="selectEmpBoardArticleListByCategory"
+		parameterType="map"
+		resultType="com.developer.myapp.empboard.model.EmpBoard">
+		select 
+			emp_id as "empId",
+	    	category_id as "categoryId",
+			user_id as "userId",
+			emp_board_title as "empBoardTitle",
+			emp_insert_date as "empInsertDate",
+			emp_read_count as "empReadCount",
+			rnum+1 as "seq"
+		from(
+			select e.emp_id, e.category_id, e.user_id, e.emp_board_title,
+					e.emp_insert_date, e.emp_read_count, rownum as rnum
+			from emp_board e, user_table u
+			where e.user_id=u.user_id
+			and e.category_id=#{categoryId}
+		)
+		where rnum between #{start} and #{end}
+		order by emp_insert_date desc
+	</select>
+
+	<!-- 게시글 상세 조회 -->
+	<select id="selectEmpBoardArticle" parameterType="int"
+		resultType="com.developer.myapp.empboard.model.EmpBoard">
+	select e.emp_id as "empId",
+               e.category_id as "categoryId",
+               e.user_id as "userId",
+               e.emp_board_title as "empBoardTitle",
+               e.emp_board_content as "empBoardContent",
+               e.emp_insert_date as "empInsertDate",
+               e.emp_read_count as "empReadCount",
+               f.emp_file_name as "empFileName",
+               f.emp_file_id as "empFileId",
+               f.emp_file_size as "empFileSize"
+        from emp_board e
+        left outer join emp_upload_file f 
+        on e.emp_id = f.emp_id
+        where e.emp_id= #{empId} and category_id=#{categoryId}
+	</select>
+	
+	<!-- 게시글 사진 상세조회 -->
+	  <select id="getEmpFile" parameterType="int" resultType="com.developer.myapp.empboard.model.EmpUploadFile">
+   		SELECT
+     		 emp_FILE_ID       AS   "empFileId",   
+      		 emp_ID            AS   "empId",
+     		 emp_FILE_NAME     AS   "empFileName",
+     		 emp_FILE_SIZE     AS   "empFileSize",
+      		 emp_FILE_CONTENT  AS   "empFileContent",
+     		 emp_FILE_DATA     AS   "empFileData"
+  	   FROM emp_UPLOAD_FILE
+   	   WHERE emp_FILE_ID=#{empFileId}
+   </select>
+
+	<!-- 조회 수 업데이트 -->
+	<update id="updateEmpBoardReadCount" parameterType="int">
+		update emp_board
+		set emp_read_count = emp_read_count +1
+		where emp_id=#{empId}
+	</update>
+
+	<!-- 게시글 최대번호 -->
+	<select id="selectMaxEmpBoardArticleNo" parameterType="int"
+		resultType="int">
+		select NVL(max(emp_id),0) as "empBoardArticleNo"
+		from emp_board
+	</select>
+
+	<!--파일ID 최대번호 -->
+	<select id="selectMaxEmpBoardFileId" parameterType="int"
+		resultType="int">
+		select NVL(max(emp_file_id),0) as "empFileId"
+		from emp_upload_file
+	</select>
+
+	<!-- 게시글 입력 -->
+	<insert id="insertEmpBoardArticle"
+		parameterType="com.developer.myapp.empboard.model.EmpBoard">
+		insert into emp_board (emp_id, category_id, user_id, emp_board_title,
+							  emp_board_content, emp_insert_date, emp_read_count)
+		values(emp_id_SEQ.nextval, #{categoryId}, #{userId}, #{empBoardTitle}, #{empBoardContent}, sysdate, 0)
+	</insert>
+
+	<!--파일 첨부 -->
+	<insert id="insertEmpBoardFileData"
+		parameterType="com.developer.myapp.empboard.model.EmpUploadFile">
+		insert into emp_upload_file (emp_file_id, emp_id, emp_file_name,
+									 emp_file_size, emp_file_content, emp_file_data)
+		values(emp_file_id_SEQ.nextval , #{empId}, #{empFileName}, #{empFileSize}, #{empFileContent}, #{empFileData})
+	</insert>
+
+	<!-- 게시글 수정 -->
+	<update id="updateEmpBoardArticle"
+		parameterType="com.developer.myapp.empboard.model.EmpBoard">
+		update emp_board
+		set emp_board_title =#{empBoardTitle}, emp_board_content=#{empBoardContent},
+			emp_insert_date=sysdate
+		where emp_id=#{empId}
+	</update>
+
+	<!-- 파일 수정 -->
+	<update id="updateEmpBoardFileData"
+		parameterType="com.developer.myapp.empboard.model.EmpUploadFile">
+		update emp_upload_file
+		set emp_file_name=#{empFileName}, emp_file_size=#{empFileSize},
+			emp_file_content= #{empFileContent}, emp_file_data=#{empFileData}
+		where emp_file_id=#{empFileId}
+	</update>
+
+	<!--삭제할 게시글 정보 가져옴 -->
+	<select id="selectEmpBoardDeleteArticle" parameterType="int"
+		resultType="com.developer.myapp.empboard.model.EmpBoard">
+		select category_id as "categoryId"
+		from emp_board
+		where emp_id = #{empId}
+	</select>
+
+	<!-- 게시글 안에 댓글삭제 -->
+	<delete id="deleteEmpBoardReply" parameterType="int">
+		delete from board_reply R
+		where exists (select emp_id from emp_board E
+					  where E.emp_id=#{empId}
+					  and E.emp_id=R.emp_id)
+	</delete>
+
+	<!-- 게시글 안에 파일삭제 -->
+	<delete id="deleteEmpBoardFileData" parameterType="int">
+		 delete from emp_upload_file F
+		where exists (select emp_id from emp_board E
+					  where E.emp_id=#{empId}
+					  and E.emp_id=F.emp_id)  
+	</delete>
+	
+	<!-- 게시글 삭제 -->
+	<delete id="deleteEmpBoardArticleByBoardId">
+		delete from emp_board
+		where emp_id=#{empId}
+	</delete>
+
+	<!--게시글 총 수 -->
+	<select id="selectEmpBoardTotalArticleCount" resultType="int">
+		select count(emp_id) as "count"
+		from emp_board
+	</select>
+
+	<!--카테고리 안에 있는 게시글 개수 -->
+	<select id="selectEmpBoardTotalArticleCountByCategoryId"
+		parameterType="int" resultType="int">
+		select count(emp_id) as "count"
+		from emp_board
+		where category_id=#{categoryId}
+	</select>
+
+	<!-- 키워드 별 게시글 수 -->
+	<select id="selectEmpBoardTotalArticleCountByKeyword"
+		parameterType="string" resultType="int">
+		select count(*) from emp_board
+		where emp_board_title like #{keyword} or emp_board_content like #{keyword}
+	</select>
+
+	<!-- 키워드 별 게시글 검색 -->
+	<select id="searchEmpBoardListByContentKeyword"
+		parameterType="hashmap"
+		resultType="com.developer.myapp.empboard.model.EmpBoard">
+		select
+				emp_id as "empId",
+				category_id as "categoryId",
+				user_id as "userId",
+				emp_board_title as "empBoardTitle",
+				emp_insert_date as "empInsertDate",
+				emp_read_count as "empReadCount",
+				rownum+1 as "seq"
+		from(
+			select *
+			from emp_board 
+			where emp_board_title like #{keyword}
+					or
+			  	  emp_board_content like #{keyword}
+			)
+		where rownum between #{start} and #{end}
+        order by emp_insert_date desc
+	</select>
+	
+
+</mapper>

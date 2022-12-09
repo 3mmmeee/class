@@ -1,0 +1,151 @@
+@charset "UTF-8";
+
+header {
+	background: #ced4da;
+	display: inline-block;
+	width: 100%;
+	display: flex;
+	height: 75px;
+	align-items: center;
+}
+
+a {
+	text-decoration: none;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.headerBox {
+	width: 1400px;
+	height: 100%;
+	margin: 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.header-logo {
+	padding: 0;
+	width: 257px;
+	height: 51px;
+	margin-right: 20;
+	height: 51px;
+}
+
+ul, li {
+	list-style: none;
+}
+
+.list a {
+	text-decoration: none;
+	color: inherit;
+	display: block;
+	padding: 20px;
+}
+
+.list>li {
+	display: inline-block;
+	width: 200px;
+	vertical-align: top;
+	text-align: center;
+	font-size: 25px;
+}
+
+.list .list2 {
+	display: none;
+	padding: 0;
+	margin: 0;
+	position: absolute;
+	width: 200px;
+}
+
+.list>li:hover .list2 {
+	display: block;
+	background: #404040;
+}
+
+.list2>li {
+	padding: o;
+	background: #ced4da;
+	height: 100%;
+	padding: 10px;
+}
+
+.list2 li:hover {
+	background: #404040;
+	color: #ffffff;
+	display: block;
+	height: 100%;
+}
+
+.list2 a {
+	padding: 0px;
+	margin: 0px;
+	height: 100%;
+}
+
+.text {
+	display: inline-block;
+}
+
+.Header_SignUp_btn {
+	width: 156px;
+	height: 38px;
+	box-shadow: inset 0px 1px 0px 0px #ced4da;
+	background: linear-gradient(to bottom, #ffffff 5%, #ffffff 100%);
+	background-color: #ffffff;
+	border-radius: 6px;
+	border: 1px solid #ced4da;
+	display: inline-block;
+	cursor: pointer;
+	color: #666666;
+	font-family: Arial;
+	font-size: 17px;
+	font-weight: bold;
+	padding: 6px 23px;
+	text-decoration: none;
+	margin-left: 30px;
+}
+
+.Header_SignUp_btn:hover {
+	background: linear-gradient(to bottom, #404040 5%, #404040 100%);
+	background-color: #404040;
+	color: #ffffff;
+}
+
+.Header_SignUp_btn:active {
+	position: relative;
+	top: 1px;
+}
+
+.Header_login_btn {
+	width: 170px;
+	height: 38px;
+	box-shadow: inset 0px 1px 0px 0px #ced4da;
+	background: linear-gradient(to bottom, #404040 5%, #404040 100%);
+	background-color: #ffffff;
+	border-radius: 6px;
+	border: 1px solid #ced4da;
+	display: inline-block;
+	cursor: pointer;
+	color: #ffffff;
+	font-family: Arial;
+	font-size: 17px;
+	font-weight: bold;
+	padding: 6px 24px;
+	text-decoration: none;
+}
+
+.Header_login_btn:hover {
+	background: linear-gradient(to bottom, #ffffff 5%, #ffffff 100%);
+	background-color: #666666;
+	color: #666666;
+}
+
+.Header_login_btn:active {
+	position: relative;
+	top: 1px;
+}

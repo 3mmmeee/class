@@ -1,0 +1,15 @@
+@charset "UTF-8";
+footer {
+	position: relative;
+	transform: translateY(-100%);
+	border-top: 1px solid #94969b;
+	background: white;
+	height: 100px;
+}
+
+.footer-content {
+	padding: 20px;
+	text-align: center;
+	color: #94969b;
+	font-size: 10px;
+}

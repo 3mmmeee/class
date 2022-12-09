@@ -1,0 +1,128 @@
+@charset "UTF-8";
+
+@import
+   url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap")
+   ;
+
+.{
+display:inline-block;  
+}
+
+.ad_img {
+   width: 100%;
+}
+.insertTable{
+	font-size: 20px;
+}
+.line {
+   width: 100%;
+   margin: 0;
+   padding: 0;
+   /* text-align: center; */
+   font-size: 10px;
+}
+
+.inline:after {
+   display: inline-block;
+   margin: 0 0 3px 20px;
+   height: 10px;
+   content: " ";
+   text-shadow: none;
+   background-color: #999;
+   width: 40%;
+}
+
+.inline:before {
+   display: inline-block;
+   margin: 0 20px 3px 0;
+   height: 10px;
+   /* content: " "; */
+   text-shadow: none;
+   background-color: #999;
+   width: 40%;
+}
+
+.hr-sect {
+   display: flex;
+   flex-basis: 3%;
+   align-items: center;
+   color: rgba(0, 0, 0, 0.35);
+   /*    font-size: 12px; */
+   margin: 8px 0px;
+   font-size: 25px;
+   margin-bottom: 20px;
+}
+
+.hr-sect:before, .hr-sect:after {
+   content: "";
+   flex-grow: 1;
+   background: rgba(0, 0, 0, 0.35);
+   height: 1px;
+   font-size: 0px;
+   line-height: 0px;
+   margin: 0px 16px;
+}
+
+table {
+   width: 100%;
+   border-top: 5px solid #444444;
+   border-collapse: collapse;
+}
+
+th, td {
+   border-bottom: 1px solid #444444;
+   padding: 10px;
+   background: #f8f9fa;
+}
+
+/* .replyInsert {
+   height: 30px;
+   width: 1100px;
+}
+ */
+.jhBoardView {
+   text-align: center;
+}
+
+.click {
+   padding-block: 18px;
+}
+
+.click_button_btn {
+   width: 150px;
+   height: 33px;
+   box-shadow: inset 0px 1px 0px 0px #ced4da;
+   background: linear-gradient(to bottom, #ffffff 5%, #ffffff 100%);
+   background-color: #ffffff;
+   border-radius: 6px;
+   border: 1px solid #ced4da;
+   display: inline-block;
+   cursor: pointer;
+   color: #666666;
+   font-family: Arial;
+   font-size: 17px;
+   font-weight: bold;
+   text-decoration: none;
+   margin-left: 10px;
+}
+
+.click_button_btn:hover {
+   background: linear-gradient(to bottom, #404040 5%, #404040 100%);
+   background-color: #404040;
+   color: #ffffff;
+}
+
+.click_button_btn:active {
+   position: relative;
+   top: 1px;
+}
+
+.click_reply {
+   padding-block: 18px;
+}
+.row1{
+    border-top: 5px solid #444444;
+}  
+/* td.replyContent{
+       width: -webkit-fill-available;
+} */
